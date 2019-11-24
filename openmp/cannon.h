@@ -24,7 +24,7 @@ void process_mult(Matrix *A, Matrix *B, Matrix *C) {
     //Matrix *sc = new Matrix(BLOCK_SZ, BLOCK_SZ);
 
 
-#pragma omp parallel default(none) private(l, m, r, c, k, rbegin, rend, cbegin, cend, id) shared(A, B, C) num_threads(P)
+#pragma omp parallel private(l, m, r, c, k, rbegin, rend, cbegin, cend, id) shared(A, B, C) num_threads(P)
     {
         id = omp_get_thread_num();
         rbegin = (id / P_SQRT) * BLOCK_SZ;
@@ -38,7 +38,7 @@ void process_mult(Matrix *A, Matrix *B, Matrix *C) {
         sa->toZeros();
         sb->toZeros();
         sc->toZeros();
-        //copy the blocks for this process
+        //printf("copy the blocks for this process");
         for(r = rbegin, l = 0; r < rend; r++, l++){
             for(c = cbegin, m = 0; c < cend; c++, m++){
                 sa->data[l][m] = A->data[r][c];
@@ -46,7 +46,7 @@ void process_mult(Matrix *A, Matrix *B, Matrix *C) {
                 sc->data[l][m] = C->data[r][c];
             }
         }
-
+        //printf("Product");
         matrix_product(sc, sa, sb);
 
         //put results back to C
@@ -59,11 +59,14 @@ void process_mult(Matrix *A, Matrix *B, Matrix *C) {
 }
 
 
-void CannonMultiplex(Matrix *A, Matrix *B, Matrix *C){
+void CannonMultiplex(Matrix *&A, Matrix *&B, Matrix *&C)
+{
+   // printf("* Shifting matrices\n");
     shift_matrix_left(A, BLOCK_SZ, 1);
     shift_matrix_up(B, BLOCK_SZ, 1);
     double t1, t2;
     t1 = omp_get_wtime();
+    //printf("* Multiplexing\n");
     for(int i = 0; i < P_SQRT; i++){
         process_mult(A, B, C);
         shift_matrix_left(A, BLOCK_SZ, 0);

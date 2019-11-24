@@ -30,6 +30,8 @@ int main(){
     log(C, el_time, "C (naive)");
     cout << "=====> Band multiplication" << endl;
     BandMultiplication(A,B,C);
+    cout << "=====> Cannon multiplication(openmp)" << endl;
+    CannonMultiplex(A,B,C);
     cout << "==> Finished" << endl;
     cout << "==> Chunk " << CHUNK  << " * Time " << el_time<< endl;
     return 0;
