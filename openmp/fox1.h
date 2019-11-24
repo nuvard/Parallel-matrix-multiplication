@@ -1,4 +1,3 @@
-
 #ifndef OPENMP_MULTIPLICATION_CANNON_H
 #define OPENMP_MULTIPLICATION_CANNON_H
 
@@ -59,10 +58,9 @@ void process_mult(Matrix *A, Matrix *B, Matrix *C) {
 }
 
 
-void CannonMultiplex(Matrix *&A, Matrix *&B, Matrix *&C)
+void FoxMultiplex(Matrix *&A, Matrix *&B, Matrix *&C)
 {
    // printf("* Shifting matrices\n");
-    C->toZeros();
     shift_matrix_left(A, BLOCK_SZ, 1);
     shift_matrix_up(B, BLOCK_SZ, 1);
     double t1, t2;

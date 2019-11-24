@@ -1,6 +1,5 @@
-
-#ifndef OPENMP_MULTIPLICATION_CANNON_H
-#define OPENMP_MULTIPLICATION_CANNON_H
+#ifndef OPENMP_MULTIPLICATION_FOX_H
+#define OPENMP_MULTIPLICATION_FOX_H
 
 
 
@@ -15,7 +14,7 @@
  * multiply the corresponding submatrices of A and B.
  */
 
-void process_mult(Matrix *A, Matrix *B, Matrix *C) {
+void fox_process_mult(Matrix *A, Matrix *B, Matrix *C) {
     int r, c, id, k,
             rbegin, rend, cbegin, cend, // block delimiters
             l, m;
@@ -58,23 +57,26 @@ void process_mult(Matrix *A, Matrix *B, Matrix *C) {
     }
 }
 
-
-void CannonMultiplex(Matrix *&A, Matrix *&B, Matrix *&C)
+void imhere(){
+	cout <<"I'm here!"<< endl;
+}
+void FoxMultiplex(Matrix *&A, Matrix *&B, Matrix *&C)
 {
    // printf("* Shifting matrices\n");
     C->toZeros();
-    shift_matrix_left(A, BLOCK_SZ, 1);
-    shift_matrix_up(B, BLOCK_SZ, 1);
+   //shift_matrix_left(A, BLOCK_SZ, );
+    //shift_matrix_up(B, BLOCK_SZ, 0);
     double t1, t2;
     t1 = omp_get_wtime();
     //printf("* Multiplexing\n");
     for(int i = 0; i < P_SQRT; i++){
-        process_mult(A, B, C);
-        shift_matrix_left(A, BLOCK_SZ, 0);
+        fox_process_mult(A, B, C);
+        //shift_matrix_left(A, BLOCK_SZ, 0);
+
         shift_matrix_up(B, BLOCK_SZ, 0);
     }
     t2 = omp_get_wtime();
     log(C, t2-t1, "Cannon");
 }
 
-#endif //OPENMP_MULTIPLICATION_CANNON_H
+#endif //OPENMP_MULTIPLICATION_FOX_H
